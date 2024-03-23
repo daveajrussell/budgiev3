@@ -58,13 +58,13 @@ export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
                       <Button
                         text="Cancel"
                         type="button"
-                        thing="secondary"
+                        color="secondary"
                         onClick={closeModal}
                       ></Button>
                       <Button
                         text="Delete"
                         type="submit"
-                        thing="delete"
+                        color="delete"
                         onClick={closeModal}
                       ></Button>
                     </div>

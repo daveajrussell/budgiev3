@@ -3,13 +3,13 @@ import classNames from "../helpers/class-names";
 type ButtonProps = {
   text: string;
   type: "button" | "submit";
-  thing: "primary" | "secondary" | "delete";
+  color: "primary" | "secondary" | "delete";
   onClick?: Function;
 };
 
-export const Button = ({ text, type, thing, onClick }: ButtonProps) => {
+export const Button = ({ text, type, color: color, onClick }: ButtonProps) => {
   function classForThing(): string {
-    switch (thing) {
+    switch (color) {
       case "secondary":
         return "bg-white text-black focus-visible:outline-black";
       case "delete":

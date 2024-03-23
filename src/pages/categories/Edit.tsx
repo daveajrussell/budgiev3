@@ -104,16 +104,16 @@ export const Edit = () => {
             <Button
               text="Delete"
               type="button"
-              thing="delete"
+              color="delete"
               onClick={openModal}
             />
           </div>
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <NavLink to="/categories">
-              <Button text="Cancel" type="button" thing="secondary" />
+              <Button text="Cancel" type="button" color="secondary" />
             </NavLink>
-            <Button text="Save" type="submit" thing="primary" />
+            <Button text="Save" type="submit" color="primary" />
           </div>
         </div>
       </Form>

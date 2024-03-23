@@ -35,7 +35,7 @@ export const List = () => {
       <div className="flex justify-between items-center">
         <h1>Categories</h1>
         <NavLink to="new">
-          <Button text="Add new" type="button" thing="secondary" />
+          <Button text="Add new" type="button" color="secondary" />
         </NavLink>
       </div>
 
