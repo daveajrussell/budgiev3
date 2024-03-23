@@ -1,12 +1,7 @@
-import { Categories } from "../pages/categories/Categories";
-import { categoryLoader, categoriesLoader } from "../pages/categories/loaders";
-import { Edit } from "../pages/categories/Edit";
-import { List } from "../pages/categories/List";
-import { Dashboard } from "../pages/Dashboard";
-import {
-  categoryAction,
-  deleteCategoryAction,
-} from "../pages/categories/actions";
+import { Categories } from "../features/categories/Categories";
+import { Edit } from "../features/categories/Edit";
+import { List } from "../features/categories/List";
+import { Dashboard } from "../features/dashboard/Dashboard";
 
 const topLevelNavigation = [
   {
@@ -22,26 +17,17 @@ const topLevelNavigation = [
       {
         name: "Categories",
         path: "/categories",
-        loader: categoriesLoader,
         Component: List,
       },
       {
         name: "Edit category",
         path: "/categories/:id",
-        loader: categoryLoader,
-        action: categoryAction,
         Component: Edit,
       },
       {
         name: "New category",
         path: "/categories/new",
-        loader: categoryLoader,
-        action: categoryAction,
         Component: Edit,
-      },
-      {
-        path: "/categories/:id/destroy",
-        action: deleteCategoryAction,
       },
     ],
   },

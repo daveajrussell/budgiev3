@@ -5,16 +5,16 @@ import {
 import { NavLink } from "react-router-dom";
 import classNames from "../../helpers/class-names";
 import { Category, types } from "./Categories";
-import { useLoaderData } from "react-router-typesafe";
-import { categoriesLoader } from "./loaders";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { Button } from "../../components/Button";
 import { Delete } from "./Delete";
 import { useRef, useState } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectCategories } from "./categorySlice";
 
 export const List = () => {
-  const { categories } = useLoaderData<typeof categoriesLoader>();
+  const categories = useAppSelector((rootState) => selectCategories(rootState));
   const [isOpen, setIsOpen] = useState(false);
   const idToDelete = useRef("");
   const headers =

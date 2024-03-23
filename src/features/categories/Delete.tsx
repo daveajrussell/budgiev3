@@ -1,7 +1,8 @@
 import { Transition, Dialog } from "@headlessui/react";
-import { Form, useLocation } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import { Button } from "../../components/Button";
+import { useAppDispatch } from "../../app/hooks";
+import { deleteCategory } from "./categorySlice";
 
 type DeleteProps = {
   id: string;
@@ -10,8 +11,13 @@ type DeleteProps = {
 };
 
 export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
-  const { pathname } = useLocation();
-  const action = pathname.indexOf(id) >= 0 ? "destroy" : `${id}/destroy`;
+  const dispatch = useAppDispatch();
+
+  function onDelete() {
+    dispatch(deleteCategory(id));
+    closeModal();
+  }
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -46,29 +52,27 @@ export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
                   >
                     Delete category
                   </Dialog.Title>
-                  <Form method="post" action={action}>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        This will permanently delete this category and you will
-                        no longer be able to use it in any budgets.
-                      </p>
-                    </div>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      This will permanently delete this category and you will no
+                      longer be able to use it in any budgets.
+                    </p>
+                  </div>
 
-                    <div className="mt-4 flex items-center justify-end gap-x-6">
-                      <Button
-                        text="Cancel"
-                        type="button"
-                        color="secondary"
-                        onClick={closeModal}
-                      ></Button>
-                      <Button
-                        text="Delete"
-                        type="submit"
-                        color="delete"
-                        onClick={closeModal}
-                      ></Button>
-                    </div>
-                  </Form>
+                  <div className="mt-4 flex items-center justify-end gap-x-6">
+                    <Button
+                      text="Cancel"
+                      type="button"
+                      color="secondary"
+                      onClick={closeModal}
+                    ></Button>
+                    <Button
+                      text="Delete"
+                      type="submit"
+                      color="delete"
+                      onClick={onDelete}
+                    ></Button>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
