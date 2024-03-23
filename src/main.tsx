@@ -1,0 +1,20 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { App } from "./App.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import topLevelNavigation from "./navigation/top-level-nav";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: topLevelNavigation,
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <RouterProvider router={router}></RouterProvider>
+  </React.StrictMode>
+);
