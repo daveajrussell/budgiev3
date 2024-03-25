@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Category, types } from "./Categories";
+import { Category } from "./Categories";
 import { mockCategories } from "./mock-categories";
 import { RootState } from "../../app/store";
 import { createAppSelector } from "../../app/hooks";
+import { types } from "../../types/category-types";
 
 const initialState: CategoriesState = { categories: mockCategories };
 

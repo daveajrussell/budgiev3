@@ -1,4 +1,5 @@
-import { Category, types } from "./Categories";
+import { types } from "../../types/category-types";
+import { Category } from "./Categories";
 
 export const mockCategories: Category[] = [
   { id: "hIjQDqnys0u56AVg9lCuE", name: "Salary", type: types.income },

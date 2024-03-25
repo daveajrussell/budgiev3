@@ -1,10 +1,6 @@
 import { Outlet } from "react-router-dom";
+import { TableRowValue } from "../../types/table-row-value";
 
-export const types = {
-  income: "Income",
-  expense: "Expense",
-};
-export type TableRowValue = string | number;
 export type Category = {
   [key: string]: TableRowValue;
   id: string;

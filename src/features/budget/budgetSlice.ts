@@ -1,5 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { BudgetEntry } from "./Budget";
+import { RootState } from "../../app/store";
+import { createAppSelector } from "../../app/hooks";
+import formatDate from "../../helpers/dates";
 
 const initialState: BudgetEntriesState = { entries: [] };
 
@@ -12,7 +15,6 @@ export const budgetSlice = createSlice({
   initialState: initialState,
   reducers: {
     editEntry: (state, action: PayloadAction<BudgetEntry>) => {
-      console.log(state, action);
       const idx = state.entries.findIndex((c) => c.id === action.payload.id);
       if (idx >= 0) {
         const entry = state.entries[idx];
@@ -23,5 +25,27 @@ export const budgetSlice = createSlice({
         state.entries.push(action.payload);
       }
     },
+    deleteEntry: (state, action: PayloadAction<string>) => {
+      const idx = state.entries.findIndex((x) => x.id === action.payload);
+      if (idx >= 0) state.entries.splice(idx, 1);
+    },
   },
 });
+
+export const { editEntry, deleteEntry } = budgetSlice.actions;
+
+export default budgetSlice.reducer;
+
+export const selectEntries = (state: RootState): BudgetEntry[] =>
+  state.budget.entries;
+
+export const selectEntry = createAppSelector(
+  (rootState) => rootState.budget.entries,
+  (_, id: string | undefined) => id,
+  (entries: BudgetEntry[], id) =>
+    entries.find((entry) => entry.id === id) ?? {
+      categoryId: "",
+      date: formatDate(),
+      amount: 0,
+    }
+);

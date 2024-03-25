@@ -1,6 +1,5 @@
-import { Menu } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { types } from "./Categories";
+import { Listbox } from "@headlessui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "../../components/Button";
@@ -8,6 +7,7 @@ import { Delete } from "./Delete";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { editCategory, selectCategory } from "./categorySlice";
 import { nanoid } from "nanoid";
+import { types } from "../../types/category-types";
 
 export const Edit = () => {
   const { id } = useParams();
@@ -33,6 +33,7 @@ export const Edit = () => {
 
   function closeModal() {
     setIsOpen(false);
+    navigate("/categories");
   }
 
   function openModal() {
@@ -78,39 +79,41 @@ export const Edit = () => {
                 Type
               </label>
               <div className="mt-2 flex items-center gap-x-3">
-                <input
-                  type="hidden"
-                  name="type"
-                  id="type"
+                <Listbox
+                  as="div"
+                  className="relative inline-block text-left"
                   value={categoryType}
-                />
-                <Menu as="div" className="relative inline-block text-left">
-                  <div>
-                    <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {categoryType}
-                      <ChevronDownIcon
-                        className="-mr-1 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </Menu.Button>
-                  </div>
-                  <Menu.Items className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {Object.values(types).map((type) => {
-                        return (
-                          <Menu.Item key={type}>
-                            <span
-                              className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer"
-                              onClick={() => updateCategoryType(type)}
-                            >
+                  onChange={updateCategoryType}
+                  name="type"
+                >
+                  {({ open }) => (
+                    <>
+                      <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        {categoryType}
+                        {open ? (
+                          <ChevronUpIcon
+                            className="-mr-1 h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <ChevronDownIcon
+                            className="-mr-1 h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </Listbox.Button>
+                      <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {Object.values(types).map((type) => (
+                          <Listbox.Option key={type} value={type}>
+                            <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
                               {type}
                             </span>
-                          </Menu.Item>
-                        );
-                      })}
-                    </div>
-                  </Menu.Items>
-                </Menu>
+                          </Listbox.Option>
+                        ))}
+                      </Listbox.Options>
+                    </>
+                  )}
+                </Listbox>
               </div>
             </div>
           </div>
@@ -119,12 +122,14 @@ export const Edit = () => {
 
       <div className="flex justify-between">
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <Button
-            text="Delete"
-            type="button"
-            color="delete"
-            onClick={openModal}
-          />
+          {id ? (
+            <Button
+              text="Delete"
+              type="button"
+              color="delete"
+              onClick={openModal}
+            />
+          ) : null}
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">
