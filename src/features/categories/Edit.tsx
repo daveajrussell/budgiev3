@@ -44,103 +44,97 @@ export const Edit = () => {
 
   return (
     <>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Category
-          </h2>
+      <h1 className="py-2">{id ? "Edit Category" : "New Category"}</h1>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Name
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    autoComplete="name"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    value={categoryName}
-                    onChange={(event) => setName(event.target.value)}
-                  />
-                </div>
+      <div className="border-b border-gray-900/10 py-6">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="sm:col-span-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Name
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  autoComplete="name"
+                  className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  value={categoryName}
+                  onChange={(event) => setName(event.target.value)}
+                />
               </div>
             </div>
+          </div>
 
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Amount
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    type="number"
-                    name="amount"
-                    id="amount"
-                    autoComplete="amount"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    value={categoryAmount}
-                    onChange={(event) =>
-                      setAmount(parseInt(event.target.value))
-                    }
-                  />
-                </div>
+          <div className="sm:col-span-4">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Amount
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <input
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  autoComplete="amount"
+                  className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  value={categoryAmount}
+                  onChange={(event) => setAmount(parseInt(event.target.value))}
+                />
               </div>
             </div>
+          </div>
 
-            <div className="col-span-full">
-              <label
-                htmlFor="type"
-                className="block text-sm font-medium leading-6 text-gray-900"
+          <div className="col-span-full">
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Type
+            </label>
+            <div className="mt-2 flex items-center gap-x-3">
+              <Listbox
+                as="div"
+                className="relative inline-block text-left"
+                value={categoryType}
+                onChange={setType}
+                name="type"
               >
-                Type
-              </label>
-              <div className="mt-2 flex items-center gap-x-3">
-                <Listbox
-                  as="div"
-                  className="relative inline-block text-left"
-                  value={categoryType}
-                  onChange={setType}
-                  name="type"
-                >
-                  {({ open }) => (
-                    <>
-                      <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                        {categoryType}
-                        {open ? (
-                          <ChevronUpIcon
-                            className="-mr-1 h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <ChevronDownIcon
-                            className="-mr-1 h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </Listbox.Button>
-                      <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {Object.values(types).map((type) => (
-                          <Listbox.Option key={type} value={type}>
-                            <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
-                              {type}
-                            </span>
-                          </Listbox.Option>
-                        ))}
-                      </Listbox.Options>
-                    </>
-                  )}
-                </Listbox>
-              </div>
+                {({ open }) => (
+                  <>
+                    <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      {categoryType}
+                      {open ? (
+                        <ChevronUpIcon
+                          className="-mr-1 h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ChevronDownIcon
+                          className="-mr-1 h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Listbox.Button>
+                    <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {Object.values(types).map((type) => (
+                        <Listbox.Option key={type} value={type}>
+                          <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
+                            {type}
+                          </span>
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </>
+                )}
+              </Listbox>
             </div>
           </div>
         </div>

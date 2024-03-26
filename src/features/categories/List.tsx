@@ -37,7 +37,7 @@ export const List = () => {
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1>Categories</h1>
+        <h1 className="py-2">Categories</h1>
         <NavLink to="new">
           <Button text="Add new" type="button" color="secondary" />
         </NavLink>
