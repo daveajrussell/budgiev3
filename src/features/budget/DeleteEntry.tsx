@@ -10,7 +10,7 @@ type DeleteProps = {
   closeModal: Function;
 };
 
-export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
+export const DeleteEntry = ({ id, isOpen, closeModal }: DeleteProps) => {
   const dispatch = useAppDispatch();
 
   function onDelete() {

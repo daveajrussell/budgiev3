@@ -12,12 +12,13 @@ import { types } from "../../types/category-types";
 export const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { name, type } = useAppSelector((rootState) =>
+  const { name, type, amount } = useAppSelector((rootState) =>
     selectCategory(rootState, id)
   );
   const dispatch = useAppDispatch();
-  const [categoryName, updateCategoryName] = useState(name);
-  const [categoryType, updateCategoryType] = useState(type ?? "Type");
+  const [categoryName, setName] = useState(name);
+  const [categoryType, setType] = useState(type ?? "Type");
+  const [categoryAmount, setAmount] = useState(amount);
   const [isOpen, setIsOpen] = useState(false);
 
   function saveCategory() {
@@ -26,6 +27,7 @@ export const Edit = () => {
         id: id ?? nanoid(),
         name: categoryName,
         type: categoryType,
+        amount: categoryAmount,
       })
     );
     navigate("/categories");
@@ -65,7 +67,31 @@ export const Edit = () => {
                     autoComplete="name"
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     value={categoryName}
-                    onChange={(event) => updateCategoryName(event.target.value)}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-4">
+              <label
+                htmlFor="amount"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Amount
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                  <input
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    autoComplete="amount"
+                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    value={categoryAmount}
+                    onChange={(event) =>
+                      setAmount(parseInt(event.target.value))
+                    }
                   />
                 </div>
               </div>
@@ -83,7 +109,7 @@ export const Edit = () => {
                   as="div"
                   className="relative inline-block text-left"
                   value={categoryType}
-                  onChange={updateCategoryType}
+                  onChange={setType}
                   name="type"
                 >
                   {({ open }) => (

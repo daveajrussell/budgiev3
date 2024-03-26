@@ -4,7 +4,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectCategories } from "../categories/categorySlice";
 import { selectEntries } from "./budgetSlice";
 import { useRef, useState } from "react";
-import { Delete } from "./Delete";
+import { DeleteEntry } from "./DeleteEntry";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BudgetEntry } from "./Budget";
 import { types } from "../../types/category-types";
@@ -100,7 +100,11 @@ export const ListEntries = () => {
         </Table>
       </div>
 
-      <Delete id={idToDelete.current} isOpen={isOpen} closeModal={closeModal} />
+      <DeleteEntry
+        id={idToDelete.current}
+        isOpen={isOpen}
+        closeModal={closeModal}
+      />
     </>
   );
 };

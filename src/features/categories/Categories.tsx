@@ -6,6 +6,7 @@ export type Category = {
   id: string;
   name: TableRowValue;
   type: TableRowValue;
+  amount: number;
 };
 
 export const Categories = () => {

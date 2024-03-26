@@ -21,6 +21,7 @@ export const categorySlice = createSlice({
         const category = state.categories[idx];
         category.name = action.payload.name;
         category.type = action.payload.type;
+        category.amount = action.payload.amount;
       } else {
         state.categories.push(action.payload);
       }
@@ -46,5 +47,6 @@ export const selectCategory = createAppSelector(
     categories.find((category) => category.id === id) ?? {
       name: "",
       type: types.expense,
+      amount: 0,
     }
 );

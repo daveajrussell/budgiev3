@@ -1,7 +1,7 @@
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { useState } from "react";
-import { Delete } from "./Delete";
+import { DeleteEntry } from "./DeleteEntry";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectCategories } from "../categories/categorySlice";
 import { Listbox } from "@headlessui/react";
@@ -174,7 +174,9 @@ export const EditEntry = () => {
           />
         </div>
       </div>
-      {id ? <Delete id={id} isOpen={isOpen} closeModal={closeModal} /> : null}
+      {id ? (
+        <DeleteEntry id={id} isOpen={isOpen} closeModal={closeModal} />
+      ) : null}
     </>
   );
 };

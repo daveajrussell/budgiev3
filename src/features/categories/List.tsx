@@ -49,6 +49,7 @@ export const List = () => {
             <TableHeaderRowData></TableHeaderRowData>
             <TableHeaderRowData>Name</TableHeaderRowData>
             <TableHeaderRowData>Type</TableHeaderRowData>
+            <TableHeaderRowData>Amount</TableHeaderRowData>
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
@@ -64,6 +65,9 @@ export const List = () => {
                   </TableBodyRowData>
                   <TableBodyRowData>{category.name}</TableBodyRowData>
                   <TableBodyRowData>{category.type}</TableBodyRowData>
+                  <TableBodyRowData>
+                    £{category.amount.toLocaleString()}
+                  </TableBodyRowData>
                   <TableBodyRowData>
                     <span className="flex justify-evenly">
                       <NavLink
