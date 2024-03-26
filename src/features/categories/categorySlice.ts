@@ -22,6 +22,7 @@ export const categorySlice = createSlice({
         category.name = action.payload.name;
         category.type = action.payload.type;
         category.amount = action.payload.amount;
+        category.color = action.payload.color;
       } else {
         state.categories.push(action.payload);
       }
@@ -48,5 +49,6 @@ export const selectCategory = createAppSelector(
       name: "",
       type: types.expense,
       amount: 0,
+      color: "",
     }
 );

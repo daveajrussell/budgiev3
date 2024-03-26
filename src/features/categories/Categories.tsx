@@ -7,6 +7,7 @@ export type Category = {
   name: TableRowValue;
   type: TableRowValue;
   amount: number;
+  color: string;
 };
 
 export const Categories = () => {

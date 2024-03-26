@@ -8,18 +8,25 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { editCategory, selectCategory } from "./categorySlice";
 import { nanoid } from "nanoid";
 import { types } from "../../types/category-types";
+import { CirclePicker, ColorResult } from "react-color";
 
 export const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { name, type, amount } = useAppSelector((rootState) =>
+  const { name, type, amount, color } = useAppSelector((rootState) =>
     selectCategory(rootState, id)
   );
   const dispatch = useAppDispatch();
   const [categoryName, setName] = useState(name);
   const [categoryType, setType] = useState(type ?? "Type");
   const [categoryAmount, setAmount] = useState(amount);
+  const [categoryColor, setColor] = useState(color);
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleChangeComplete = (color: ColorResult) => {
+    console.log(color.hex);
+    setColor(color.hex);
+  };
 
   function saveCategory() {
     dispatch(
@@ -28,6 +35,7 @@ export const Edit = () => {
         name: categoryName,
         type: categoryType,
         amount: categoryAmount,
+        color: categoryColor,
       })
     );
     navigate("/categories");
@@ -135,6 +143,21 @@ export const Edit = () => {
                   </>
                 )}
               </Listbox>
+            </div>
+          </div>
+
+          <div className="sm:col-span-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Color
+            </label>
+            <div className="mt-2">
+              <CirclePicker
+                color={categoryColor}
+                onChangeComplete={handleChangeComplete}
+              />
             </div>
           </div>
         </div>
