@@ -9,7 +9,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "app": "pnpm --filter budgie-app",
-    "api": "pnpm --filter budgie-api"
+    "api": "pnpm --filter budgie-api",
+    "core": "pnpm --filter budgie-core"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
