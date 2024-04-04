@@ -1,3 +1,4 @@
+import { Category } from 'budgie-core';
 import { CategoryRepository } from 'budgie-data';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
@@ -27,6 +28,22 @@ app.get('/categories/:id', async (req: Request, res: Response) => {
   const category = await categoryRepository.getByIdAsync(1, parseInt(id));
   if (!category) res.status(404).json();
   res.status(200).json(category);
+});
+
+app.post('/categories', async (req: Request, res: Response) => {
+  const category = req.body as Category;
+  const result = await categoryRepository.addAsync(1, category);
+  res.status(201).json(result);
+});
+
+app.put('/categories', async (req: Request, res: Response) => {
+  const category = req.body as Category;
+  try {
+    await categoryRepository.updateAsync(1, category.id, category);
+    res.status(204).json();
+  } catch {
+    res.status(500).json();
+  }
 });
 
 app.listen(port, () => {

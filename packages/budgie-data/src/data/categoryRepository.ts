@@ -1,4 +1,4 @@
-import { Category } from '../entities/category';
+import { Category, CategoryType } from 'budgie-core';
 import { Repository } from './repository';
 import { RepositoryBase } from './repositoryBase';
 
@@ -30,9 +30,19 @@ export class CategoryRepository
     );
   }
 
-  async addAsync(userId: number, entity: Category): Promise<void> {
-    console.log(userId, entity);
-    throw new Error('Method not implemented.');
+  async addAsync(userId: number, entity: Category): Promise<Category> {
+    const result = await this.queryAsync(
+      `
+        INSERT INTO categories (userId, name, type, amount, color) VALUES (?, ?, ?, ?, ?)
+        RETURNING id, name, type, amount, color
+      `,
+      userId,
+      entity.name,
+      CategoryType[entity.type],
+      entity.amount,
+      entity.color,
+    );
+    return result[0];
   }
 
   async updateAsync(
@@ -40,12 +50,22 @@ export class CategoryRepository
     id: number,
     entity: Category,
   ): Promise<void> {
-    console.log(userId, id, entity);
-    throw new Error('Method not implemented.');
+    return this.queryAsync(
+      'UPDATE categories SET name = ?, type = ?, amount = ?, color = ? WHERE id = ? and userId = ?',
+      entity.name,
+      CategoryType[entity.type],
+      entity.amount,
+      entity.color,
+      id,
+      userId,
+    );
   }
 
   async deleteAsync(userId: number, id: number): Promise<void> {
-    console.log(userId, id);
-    throw new Error('Method not implemented.');
+    return this.queryAsync(
+      'DELETE FROM categories WHERE id = ? and userId = ?',
+      id,
+      userId,
+    );
   }
 }

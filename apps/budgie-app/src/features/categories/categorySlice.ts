@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Category } from './Categories';
 import { RootState } from '../../app/store';
 import { createAppSelector } from '../../app/hooks';
@@ -20,34 +20,54 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async () => {
     const response = await fetch('/api/categories');
-    return response.json();
+    return await response.json();
+  },
+);
+
+export const editCategory = createAsyncThunk(
+  'categories/editCategory',
+  async (category: Category, { rejectWithValue }) => {
+    try {
+      const isNew = !category.id;
+      const method = isNew ? 'POST' : 'PUT';
+      const response = await fetch('/api/categories', {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(category),
+      });
+      if (!response.ok) {
+        throw new Error('Server responded with an error');
+      }
+      return isNew ? await response.json() : category;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const deleteCategory = createAsyncThunk(
+  'categories/deleteCategory',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await fetch('/api/categories/' + id, {
+        method: 'DELETE',
+      });
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   },
 );
 
 export const categorySlice = createSlice({
   name: 'category',
   initialState: initialState,
-  reducers: {
-    editCategory: (state, action: PayloadAction<Category>) => {
-      const idx = state.categories.findIndex((c) => c.id === action.payload.id);
-      if (idx >= 0) {
-        const category = state.categories[idx];
-        category.name = action.payload.name;
-        category.type = action.payload.type;
-        category.amount = action.payload.amount;
-        category.color = action.payload.color;
-      } else {
-        state.categories.push(action.payload);
-      }
-    },
-    deleteCategory: (state, action: PayloadAction<number>) => {
-      const idx = state.categories.findIndex((x) => x.id === action.payload);
-      if (idx >= 0) state.categories.splice(idx, 1);
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchCategories.pending, (state, action) => {
+      .addCase(fetchCategories.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
@@ -57,11 +77,34 @@ export const categorySlice = createSlice({
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(editCategory.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(editCategory.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const idx = state.categories.findIndex(
+          (c) => c.id === action.payload.id,
+        );
+        if (idx >= 0) {
+          const category = state.categories[idx];
+          category.name = action.payload.name;
+          category.type = action.payload.type;
+          category.amount = action.payload.amount;
+          category.color = action.payload.color;
+        } else {
+          state.categories.push(action.payload);
+        }
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        const idx = state.categories.findIndex((x) => x.id === action.payload);
+        if (idx >= 0) state.categories.splice(idx, 1);
+      })
+      .addCase(deleteCategory.rejected, (state) => {
+        state.status = 'failed';
       });
   },
 });
-
-export const { editCategory, deleteCategory } = categorySlice.actions;
 
 export default categorySlice.reducer;
 

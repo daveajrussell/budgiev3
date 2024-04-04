@@ -23,7 +23,6 @@ export const Edit = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleChangeComplete = (color: ColorResult) => {
-    console.log(color.hex);
     setColor(color.hex);
   };
 
@@ -131,13 +130,15 @@ export const Edit = () => {
                       )}
                     </Listbox.Button>
                     <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {Object.values(CategoryType).map((type) => (
-                        <Listbox.Option key={type} value={type}>
-                          <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
-                            {type}
-                          </span>
-                        </Listbox.Option>
-                      ))}
+                      {Object.keys(CategoryType)
+                        .filter((key) => isNaN(Number(key)))
+                        .map((type) => (
+                          <Listbox.Option key={type} value={type}>
+                            <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
+                              {type}
+                            </span>
+                          </Listbox.Option>
+                        ))}
                     </Listbox.Options>
                   </>
                 )}

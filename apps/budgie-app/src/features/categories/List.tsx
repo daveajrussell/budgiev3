@@ -29,7 +29,6 @@ export const List = () => {
   );
 
   const categoriesStatus = useAppSelector((state) => state.category.status);
-  const error = useAppSelector((state) => state.category.error);
 
   useEffect(() => {
     if (categoriesStatus === 'idle') {
@@ -85,7 +84,7 @@ export const List = () => {
                   <TableBodyRowData>
                     <span className="flex justify-evenly">
                       <NavLink
-                        to={category.id.toString()}
+                        to={category.id?.toString() ?? ''}
                         className=" font-semibold text-gray-900 hover:text-violet-500"
                       >
                         <PencilIcon className="-mr-1 h-5 w-5" />
@@ -94,7 +93,7 @@ export const List = () => {
                       <span
                         className=" font-semibold text-gray-900 hover:text-red-500 cursor-pointer"
                         onClick={() => {
-                          idToDelete.current = category.id;
+                          idToDelete.current = category.id ?? 0;
                           openModal();
                         }}
                       >

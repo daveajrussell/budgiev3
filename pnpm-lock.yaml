@@ -44,6 +44,9 @@ importers:
 
   apps/budgie-api:
     dependencies:
+      budgie-core:
+        specifier: workspace:*
+        version: link:../../packages/budgie-core
       budgie-data:
         specifier: workspace:*
         version: link:../../packages/budgie-data
