@@ -12,7 +12,7 @@ export class CategoryRepository
     offset: number,
   ): Promise<Category[]> {
     return this.queryAsync(
-      'SELECT name, type, amount, color FROM categories WHERE userId = ? LIMIT ? OFFSET ?',
+      'SELECT id, name, type, amount, color FROM categories WHERE userId = ? LIMIT ? OFFSET ?',
       userId,
       limit,
       offset,
@@ -24,7 +24,7 @@ export class CategoryRepository
     id: number,
   ): Promise<Category | undefined> {
     return this.queryAsync(
-      'SELECT name, type, amount, color FROM categories WHERE userId = ? AND id = ? LIMIT 1',
+      'SELECT id, name, type, amount, color FROM categories WHERE userId = ? AND id = ? LIMIT 1',
       userId,
       id,
     );

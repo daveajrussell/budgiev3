@@ -3,7 +3,7 @@ import { TableRowValue } from '../../types/table-row-value';
 
 export type Category = {
   [key: string]: TableRowValue;
-  id: string;
+  id: number;
   name: TableRowValue;
   type: TableRowValue;
   amount: number;

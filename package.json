@@ -10,7 +10,8 @@
     "prepare": "husky",
     "app": "pnpm --filter budgie-app",
     "api": "pnpm --filter budgie-api",
-    "core": "pnpm --filter budgie-core"
+    "core": "pnpm --filter budgie-core",
+    "data": "pnpm --filter budgie-data"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [

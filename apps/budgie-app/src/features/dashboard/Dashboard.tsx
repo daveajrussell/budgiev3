@@ -2,18 +2,20 @@ import { TooltipItem } from 'chart.js';
 import { useAppSelector } from '../../app/hooks';
 import { PieChart } from '../../components/PieChart';
 import { Tile } from '../../components/Tile';
-import { types } from '../../types/category-types';
-import { selectCategories } from '../categories/categorySlice';
+import { selectAllCategories } from '../categories/categorySlice';
 import hexRgb from 'hex-rgb';
+import { CategoryType } from 'budgie-core';
 
 export const Dashboard = () => {
-  const categories = useAppSelector((rootState) => selectCategories(rootState));
+  const categories = useAppSelector((rootState) =>
+    selectAllCategories(rootState),
+  );
 
-  const incomes = categories.filter((c) => c.type === types.income),
+  const incomes = categories.filter((c) => c.type === CategoryType.Income),
     incomesTotal = incomes
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),
-    expenses = categories.filter((c) => c.type === types.expense),
+    expenses = categories.filter((c) => c.type === CategoryType.Expense),
     expensesTotal = expenses
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),

@@ -3,9 +3,9 @@ import { TableRowValue } from '../../types/table-row-value';
 
 export type BudgetEntry = {
   [key: string]: TableRowValue;
-  id: string;
+  id: number;
   date: string;
-  categoryId: string;
+  categoryId: number;
   amount: number;
 };
 

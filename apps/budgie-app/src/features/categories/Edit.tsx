@@ -6,15 +6,14 @@ import { Button } from '../../components/Button';
 import { Delete } from './Delete';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { editCategory, selectCategory } from './categorySlice';
-import { nanoid } from 'nanoid';
-import { types } from '../../types/category-types';
 import { CirclePicker, ColorResult } from 'react-color';
+import { CategoryType } from 'budgie-core';
 
 export const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { name, type, amount, color } = useAppSelector((rootState) =>
-    selectCategory(rootState, id),
+    selectCategory(rootState, Number(id)),
   );
   const dispatch = useAppDispatch();
   const [categoryName, setName] = useState(name);
@@ -31,7 +30,7 @@ export const Edit = () => {
   function saveCategory() {
     dispatch(
       editCategory({
-        id: id ?? nanoid(),
+        id: Number(id),
         name: categoryName,
         type: categoryType,
         amount: categoryAmount,
@@ -132,7 +131,7 @@ export const Edit = () => {
                       )}
                     </Listbox.Button>
                     <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {Object.values(types).map((type) => (
+                      {Object.values(CategoryType).map((type) => (
                         <Listbox.Option key={type} value={type}>
                           <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
                             {type}
@@ -187,7 +186,9 @@ export const Edit = () => {
           />
         </div>
       </div>
-      {id ? <Delete id={id} isOpen={isOpen} closeModal={closeModal} /> : null}
+      {id ? (
+        <Delete id={Number(id)} isOpen={isOpen} closeModal={closeModal} />
+      ) : null}
     </>
   );
 };

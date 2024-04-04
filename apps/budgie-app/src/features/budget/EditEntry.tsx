@@ -3,18 +3,19 @@ import { Button } from '../../components/Button';
 import { useState } from 'react';
 import { DeleteEntry } from './DeleteEntry';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectCategories } from '../categories/categorySlice';
+import { selectAllCategories } from '../categories/categorySlice';
 import { Listbox } from '@headlessui/react';
 import { editEntry, selectEntry } from './budgetSlice';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
-import { nanoid } from 'nanoid';
 
 export const EditEntry = () => {
   const { id } = useParams();
-  const categories = useAppSelector((rootState) => selectCategories(rootState));
+  const categories = useAppSelector((rootState) =>
+    selectAllCategories(rootState),
+  );
   const navigate = useNavigate();
   const { date, categoryId, amount } = useAppSelector((rootState) =>
-    selectEntry(rootState, id),
+    selectEntry(rootState, Number(id)),
   );
   const dispatch = useAppDispatch();
   const category =
@@ -28,7 +29,7 @@ export const EditEntry = () => {
   function saveEntry() {
     dispatch(
       editEntry({
-        id: id ?? nanoid(),
+        id: Number(id),
         date: entryDate,
         categoryId: entryCategory.id,
         amount: entryAmount,
@@ -172,7 +173,7 @@ export const EditEntry = () => {
         </div>
       </div>
       {id ? (
-        <DeleteEntry id={id} isOpen={isOpen} closeModal={closeModal} />
+        <DeleteEntry id={Number(id)} isOpen={isOpen} closeModal={closeModal} />
       ) : null}
     </>
   );

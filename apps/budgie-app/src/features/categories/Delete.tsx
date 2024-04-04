@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { deleteCategory } from './categorySlice';
 
 type DeleteProps = {
-  id: string;
+  id: number;
   isOpen: boolean;
   closeModal: () => void;
 };

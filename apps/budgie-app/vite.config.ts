@@ -14,4 +14,8 @@ export default defineConfig({
       },
     },
   },
+  assetsInclude: [
+    '**/*.html', // Specify that HTML files should be treated as assets
+  ],
+  optimizeDeps: { exclude: ['@mapbox/node-pre-gyp'] },
 });

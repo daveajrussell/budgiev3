@@ -8,10 +8,9 @@ import { PencilIcon } from '@heroicons/react/24/outline';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../components/Button';
 import { Delete } from './Delete';
-import { useRef, useState } from 'react';
-import { useAppSelector } from '../../app/hooks';
-import { selectCategories } from './categorySlice';
-import { types } from '../../types/category-types';
+import { useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { fetchCategories, selectAllCategories } from './categorySlice';
 import {
   Table,
   TableHeaderRow,
@@ -20,11 +19,26 @@ import {
   TableBodyRow,
   TableBodyRowData,
 } from '../../components/table/Table';
+import { CategoryType } from 'budgie-core';
 
 export const List = () => {
-  const categories = useAppSelector((rootState) => selectCategories(rootState));
+  const dispatch = useAppDispatch();
+
+  const categories = useAppSelector((rootState) =>
+    selectAllCategories(rootState),
+  );
+
+  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const error = useAppSelector((state) => state.category.error);
+
+  useEffect(() => {
+    if (categoriesStatus === 'idle') {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
+
   const [isOpen, setIsOpen] = useState(false);
-  const idToDelete = useRef('');
+  const idToDelete = useRef(0);
 
   function closeModal() {
     setIsOpen(false);
@@ -53,11 +67,11 @@ export const List = () => {
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
-            {categories.map((category: Category) => {
+            {categories?.map((category: Category) => {
               return (
                 <TableBodyRow key={category.id}>
                   <TableBodyRowData>
-                    {category.type === types.income ? (
+                    {category.type === CategoryType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />
@@ -71,7 +85,7 @@ export const List = () => {
                   <TableBodyRowData>
                     <span className="flex justify-evenly">
                       <NavLink
-                        to={category.id}
+                        to={category.id.toString()}
                         className=" font-semibold text-gray-900 hover:text-violet-500"
                       >
                         <PencilIcon className="-mr-1 h-5 w-5" />

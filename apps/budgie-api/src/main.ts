@@ -1,4 +1,4 @@
-import { CategoryRepository } from 'budgie-core';
+import { CategoryRepository } from 'budgie-data';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 

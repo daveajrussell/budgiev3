@@ -1,13 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { useAppSelector } from '../../app/hooks';
-import { selectCategories } from '../categories/categorySlice';
+import { selectAllCategories } from '../categories/categorySlice';
 import { selectEntries } from './budgetSlice';
 import { useRef, useState } from 'react';
 import { DeleteEntry } from './DeleteEntry';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { BudgetEntry } from './Budget';
-import { types } from '../../types/category-types';
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
@@ -20,14 +19,17 @@ import {
   TableHeaderRow,
   TableHeaderRowData,
 } from '../../components/table/Table';
+import { CategoryType } from 'budgie-core';
 
 export const ListEntries = () => {
-  const categories = useAppSelector((rootState) => selectCategories(rootState));
+  const categories = useAppSelector((rootState) =>
+    selectAllCategories(rootState),
+  );
   const categoryMap = new Map();
   categories.map((c) => categoryMap.set(c.id, c.name));
   const entries = useAppSelector((rootState) => selectEntries(rootState));
   const [isOpen, setIsOpen] = useState(false);
-  const idToDelete = useRef('');
+  const idToDelete = useRef(0);
 
   function closeModal() {
     setIsOpen(false);
@@ -62,7 +64,7 @@ export const ListEntries = () => {
               return (
                 <TableBodyRow key={entry.id}>
                   <TableBodyRowData>
-                    {category?.type === types.income ? (
+                    {category?.type === CategoryType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />

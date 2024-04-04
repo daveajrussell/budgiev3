@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { deleteEntry } from './budgetSlice';
 
 type DeleteProps = {
-  id: string;
+  id: number;
   isOpen: boolean;
   closeModal: () => void;
 };
