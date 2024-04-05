@@ -46,6 +46,12 @@ app.put('/categories', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/categories/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await categoryRepository.deleteAsync(1, Number(id));
+  res.status(204).json();
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
