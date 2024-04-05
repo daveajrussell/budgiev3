@@ -20,6 +20,6 @@
   "dependencies": {
     "duckdb": "^0.10.1",
     "duckdb-async": "^0.10.0",
-    "budgie-core": "workspace:*"
+    "budgie-core": "0.0.0"
   }
 }
