@@ -1,15 +1,29 @@
 import { TooltipItem } from 'chart.js';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { PieChart } from '../../components/PieChart';
 import { Tile } from '../../components/Tile';
-import { selectAllCategories } from '../categories/categorySlice';
+import {
+  fetchCategories,
+  selectAllCategories,
+} from '../categories/categorySlice';
 import hexRgb from 'hex-rgb';
 import { CategoryType } from 'budgie-core';
+import { useEffect } from 'react';
 
 export const Dashboard = () => {
+  const dispatch = useAppDispatch();
+
   const categories = useAppSelector((rootState) =>
     selectAllCategories(rootState),
   );
+
+  const categoriesStatus = useAppSelector((state) => state.category.status);
+
+  useEffect(() => {
+    if (categoriesStatus === 'idle') {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
 
   const incomes = categories.filter((c) => c.typeValue === CategoryType.Income),
     incomesTotal = incomes

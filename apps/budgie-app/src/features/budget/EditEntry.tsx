@@ -1,38 +1,57 @@
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DeleteEntry } from './DeleteEntry';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectAllCategories } from '../categories/categorySlice';
+import {
+  fetchCategories,
+  selectAllCategories,
+} from '../categories/categorySlice';
 import { Listbox } from '@headlessui/react';
 import { editEntry, selectEntry } from './budgetSlice';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
 export const EditEntry = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { id } = useParams();
+
   const categories = useAppSelector((rootState) =>
     selectAllCategories(rootState),
   );
-  const navigate = useNavigate();
+
+  const categoriesStatus = useAppSelector((state) => state.category.status);
+
+  useEffect(() => {
+    if (categoriesStatus === 'idle') {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
+
   const { date, categoryId, amount } = useAppSelector((rootState) =>
     selectEntry(rootState, Number(id)),
   );
-  const dispatch = useAppDispatch();
-  const category =
-    categories[categories.findIndex((c) => c.id === categoryId)] ??
-    categories[0];
-  const [entryCategory, setEntryCategory] = useState(category);
-  const [entryDate, setEntryDate] = useState(date);
-  const [entryAmount, setEntryAmount] = useState(amount);
+
+  const [formData, setFormData] = useState({
+    date: date,
+    categoryId: categoryId,
+    amount: amount,
+  });
+
+  const handleChange = (prop: string, value: string | number) => {
+    setFormData({ ...formData, [prop]: value });
+  };
+
   const [isOpen, setIsOpen] = useState(false);
 
   function saveEntry() {
     dispatch(
       editEntry({
         id: Number(id),
-        date: entryDate,
-        categoryId: entryCategory.id,
-        amount: entryAmount,
+        date: formData.date,
+        categoryId: Number(formData.categoryId),
+        amount: formData.amount,
       }),
     );
     navigate('/budget');
@@ -51,7 +70,7 @@ export const EditEntry = () => {
     <>
       <h1 className="py-2">{id ? 'Edit Entry' : 'New Entry'}</h1>
 
-      <div className="border-b border-gray-900/10 py-6">
+      <form className="border-b border-gray-900/10 py-6" onSubmit={saveEntry}>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-4">
             <label
@@ -68,8 +87,8 @@ export const EditEntry = () => {
                   id="date"
                   autoComplete="date"
                   className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={entryDate}
-                  onChange={(event) => setEntryDate(event.target.value)}
+                  value={formData.date}
+                  onChange={(e) => handleChange(e.target.name, e.target.value)}
                 />
               </div>
             </div>
@@ -86,15 +105,17 @@ export const EditEntry = () => {
               <Listbox
                 as="div"
                 className="relative inline-block text-left"
-                value={entryCategory}
-                onChange={setEntryCategory}
-                name="category"
-                id="category"
+                value={formData.categoryId}
+                onChange={(categoryId) =>
+                  handleChange('categoryId', categoryId)
+                }
+                name="categoryId"
+                id="categoryId"
               >
                 {({ open }) => (
                   <>
                     <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {entryCategory.name}
+                      {categories[formData.categoryId]?.name}
                       {open ? (
                         <ChevronUpIcon
                           className="-mr-1 h-5 w-5 text-gray-400"
@@ -109,7 +130,7 @@ export const EditEntry = () => {
                     </Listbox.Button>
                     <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {categories.map((category) => (
-                        <Listbox.Option key={category.id} value={category}>
+                        <Listbox.Option key={category.id} value={category.id}>
                           <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
                             {category.name}
                           </span>
@@ -137,16 +158,16 @@ export const EditEntry = () => {
                   id="amount"
                   autoComplete="amount"
                   className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={entryAmount}
-                  onChange={(event) =>
-                    setEntryAmount(parseInt(event.target.value))
+                  value={formData.amount}
+                  onChange={(e) =>
+                    handleChange(e.target.name, parseInt(e.target.value))
                   }
                 />
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
 
       <div className="flex justify-between">
         <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -166,7 +187,7 @@ export const EditEntry = () => {
           </NavLink>
           <Button
             text="Save"
-            type="button"
+            type="submit"
             color="primary"
             onClick={() => saveEntry()}
           />
