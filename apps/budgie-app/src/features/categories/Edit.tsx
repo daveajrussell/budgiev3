@@ -1,41 +1,50 @@
 import { Listbox } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '../../components/Button';
 import { Delete } from './Delete';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { editCategory, selectCategory } from './categorySlice';
 import { CirclePicker, ColorResult } from 'react-color';
 import { CategoryType } from 'budgie-core';
+import { CategoryDto } from './Categories';
 
 export const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { name, type, amount, color } = useAppSelector((rootState) =>
-    selectCategory(rootState, Number(id)),
+  const { name, typeValue, typeName, amount, color } = useAppSelector(
+    (rootState) => selectCategory(rootState, Number(id)),
   );
   const dispatch = useAppDispatch();
   const [categoryName, setName] = useState(name);
-  const [categoryType, setType] = useState(type ?? 'Type');
+  const [categoryType, setCategoryType] = useState(typeValue ?? 0);
   const [categoryAmount, setAmount] = useState(amount);
   const [categoryColor, setColor] = useState(color);
   const [isOpen, setIsOpen] = useState(false);
+  const categoryTypeName = useRef(typeName);
 
   const handleChangeComplete = (color: ColorResult) => {
     setColor(color.hex);
   };
 
+  const setCategory = (value: string | number) => {
+    const typeValue = Number(value);
+    setCategoryType(typeValue);
+    console.log(value, CategoryType[typeValue]);
+    categoryTypeName.current = CategoryType[typeValue];
+  };
+
   function saveCategory() {
-    dispatch(
-      editCategory({
-        id: Number(id),
-        name: categoryName,
-        type: categoryType,
-        amount: categoryAmount,
-        color: categoryColor,
-      }),
-    );
+    const cat = {
+      id: Number(id),
+      name: categoryName,
+      typeValue: categoryType,
+      amount: categoryAmount,
+      color: categoryColor,
+    } as CategoryDto;
+    console.log(cat, cat.type, CategoryType);
+    dispatch(editCategory(cat));
     navigate('/categories');
   }
 
@@ -110,13 +119,13 @@ export const Edit = () => {
                 as="div"
                 className="relative inline-block text-left"
                 value={categoryType}
-                onChange={setType}
+                onChange={(value: string | number) => setCategory(value)}
                 name="type"
               >
                 {({ open }) => (
                   <>
                     <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {categoryType}
+                      {categoryTypeName.current}
                       {open ? (
                         <ChevronUpIcon
                           className="-mr-1 h-5 w-5 text-gray-400"
@@ -131,11 +140,11 @@ export const Edit = () => {
                     </Listbox.Button>
                     <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {Object.keys(CategoryType)
-                        .filter((key) => isNaN(Number(key)))
-                        .map((type) => (
+                        .filter((key) => !isNaN(Number(key)))
+                        .map((type: any) => (
                           <Listbox.Option key={type} value={type}>
                             <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
-                              {type}
+                              {CategoryType[type]}
                             </span>
                           </Listbox.Option>
                         ))}

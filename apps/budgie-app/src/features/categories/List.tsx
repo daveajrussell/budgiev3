@@ -3,7 +3,7 @@ import {
   ArrowTrendingDownIcon,
 } from '@heroicons/react/20/solid';
 import { NavLink } from 'react-router-dom';
-import { Category } from './Categories';
+import { CategoryDto } from './Categories';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../components/Button';
@@ -66,18 +66,18 @@ export const List = () => {
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
-            {categories?.map((category: Category) => {
+            {categories?.map((category: CategoryDto) => {
               return (
                 <TableBodyRow key={category.id}>
                   <TableBodyRowData>
-                    {category.type === CategoryType.Income ? (
+                    {category.typeValue === CategoryType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />
                     )}
                   </TableBodyRowData>
                   <TableBodyRowData>{category.name}</TableBodyRowData>
-                  <TableBodyRowData>{category.type}</TableBodyRowData>
+                  <TableBodyRowData>{category.typeName}</TableBodyRowData>
                   <TableBodyRowData>
                     £{category.amount.toLocaleString()}
                   </TableBodyRowData>

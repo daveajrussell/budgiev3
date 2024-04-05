@@ -53,7 +53,7 @@ export class CategoryRepository
     return this.queryAsync(
       'UPDATE categories SET name = ?, type = ?, amount = ?, color = ? WHERE id = ? and userId = ?',
       entity.name,
-      CategoryType[entity.type],
+      entity.type,
       entity.amount,
       entity.color,
       id,

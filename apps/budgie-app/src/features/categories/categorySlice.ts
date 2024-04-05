@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Category } from './Categories';
+import { CategoryDto } from './Categories';
 import { RootState } from '../../app/store';
 import { createAppSelector } from '../../app/hooks';
-import { CategoryType } from 'budgie-core';
+import { Category, CategoryType } from 'budgie-core';
 
 const initialState: CategoriesState = {
   categories: [],
@@ -11,7 +11,7 @@ const initialState: CategoriesState = {
 };
 
 export interface CategoriesState {
-  categories: Category[];
+  categories: CategoryDto[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
 }
@@ -20,13 +20,23 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async () => {
     const response = await fetch('/api/categories');
-    return await response.json();
+    const values = (await response.json()) as Category[];
+    return values.map((value) => {
+      return <CategoryDto>{
+        id: value.id,
+        name: value.name,
+        amount: value.amount,
+        typeName: CategoryType[value.type],
+        typeValue: value.type,
+        color: value.color,
+      };
+    });
   },
 );
 
 export const editCategory = createAsyncThunk(
   'categories/editCategory',
-  async (category: Category, { rejectWithValue }) => {
+  async (category: CategoryDto, { rejectWithValue }) => {
     try {
       const isNew = !category.id;
       const method = isNew ? 'POST' : 'PUT';
@@ -35,7 +45,13 @@ export const editCategory = createAsyncThunk(
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(category),
+        body: JSON.stringify(<Category>{
+          id: category.id,
+          name: category.name,
+          amount: category.amount,
+          type: category.typeValue,
+          color: category.color,
+        }),
       });
       if (!response.ok) {
         throw new Error('Server responded with an error');
@@ -89,7 +105,8 @@ export const categorySlice = createSlice({
         if (idx >= 0) {
           const category = state.categories[idx];
           category.name = action.payload.name;
-          category.type = action.payload.type;
+          category.typeValue = action.payload.typeValue;
+          category.typeName = CategoryType[action.payload.typeValue];
           category.amount = action.payload.amount;
           category.color = action.payload.color;
         } else {
@@ -108,16 +125,18 @@ export const categorySlice = createSlice({
 
 export default categorySlice.reducer;
 
-export const selectAllCategories = (state: RootState): Category[] =>
+export const selectAllCategories = (state: RootState): CategoryDto[] =>
   state.category.categories;
 
 export const selectCategory = createAppSelector(
   (rootState) => rootState.category.categories,
   (_, id: number) => id,
-  (categories: Category[], id) =>
-    categories.find((category) => category.id === id) ?? {
+  (categories: CategoryDto[], id) =>
+    categories.find((category) => category.id === id) ??
+    <CategoryDto>{
       name: '',
-      type: CategoryType.Income,
+      typeValue: CategoryType.Income,
+      typeName: CategoryType[CategoryType.Income],
       amount: 0,
       color: '',
     },
