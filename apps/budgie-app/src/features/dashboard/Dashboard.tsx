@@ -11,11 +11,11 @@ export const Dashboard = () => {
     selectAllCategories(rootState),
   );
 
-  const incomes = categories.filter((c) => c.type === CategoryType.Income),
+  const incomes = categories.filter((c) => c.typeValue === CategoryType.Income),
     incomesTotal = incomes
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),
-    expenses = categories.filter((c) => c.type === CategoryType.Expense),
+    expenses = categories.filter((c) => c.typeValue === CategoryType.Expense),
     expensesTotal = expenses
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),
