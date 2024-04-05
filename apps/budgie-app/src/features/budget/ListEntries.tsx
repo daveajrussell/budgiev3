@@ -1,12 +1,15 @@
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/Button';
-import { useAppSelector } from '../../app/hooks';
-import { selectAllCategories } from '../categories/categorySlice';
-import { selectEntries } from './budgetSlice';
-import { useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import {
+  fetchCategories,
+  selectAllCategories,
+} from '../categories/categorySlice';
+import { fetchBudgetEntries, selectEntries } from './budgetSlice';
+import { useEffect, useRef, useState } from 'react';
 import { DeleteEntry } from './DeleteEntry';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { BudgetEntry } from './Budget';
+import { BudgetEntryDto } from './Budget';
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
@@ -22,12 +25,32 @@ import {
 import { CategoryType } from 'budgie-core';
 
 export const ListEntries = () => {
+  const dispatch = useAppDispatch();
+
   const categories = useAppSelector((rootState) =>
     selectAllCategories(rootState),
   );
+
+  const entries = useAppSelector((rootState) => selectEntries(rootState));
+
+  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const budgetStatus = useAppSelector((state) => state.budget.status);
+
+  useEffect(() => {
+    if (categoriesStatus === 'idle') {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
+
+  useEffect(() => {
+    if (budgetStatus === 'idle') {
+      dispatch(fetchBudgetEntries());
+    }
+  }, [categoriesStatus, dispatch]);
+
   const categoryMap = new Map();
   categories.map((c) => categoryMap.set(c.id, c.name));
-  const entries = useAppSelector((rootState) => selectEntries(rootState));
+
   const [isOpen, setIsOpen] = useState(false);
   const idToDelete = useRef(0);
 
@@ -57,7 +80,7 @@ export const ListEntries = () => {
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
-            {entries.map((entry: BudgetEntry) => {
+            {entries.map((entry: BudgetEntryDto) => {
               const category = categories.find(
                 (c) => c.id === entry.categoryId,
               );

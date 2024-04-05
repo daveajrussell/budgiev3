@@ -33,6 +33,9 @@ export const EditEntry = () => {
     selectEntry(rootState, Number(id)),
   );
 
+  const categoryMap = new Map();
+  categories.map((c) => categoryMap.set(c.id, c.name));
+
   const [formData, setFormData] = useState({
     date: date,
     categoryId: categoryId,
@@ -115,7 +118,7 @@ export const EditEntry = () => {
                 {({ open }) => (
                   <>
                     <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {categories[formData.categoryId]?.name}
+                      {categoryMap.get(formData.categoryId)}
                       {open ? (
                         <ChevronUpIcon
                           className="-mr-1 h-5 w-5 text-gray-400"

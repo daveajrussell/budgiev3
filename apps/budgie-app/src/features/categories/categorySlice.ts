@@ -114,6 +114,7 @@ export const categorySlice = createSlice({
         }
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         const idx = state.categories.findIndex((x) => x.id === action.payload);
         if (idx >= 0) state.categories.splice(idx, 1);
       })
