@@ -1,7 +1,7 @@
 import { Listbox } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../components/Button';
 import { Delete } from './Delete';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -13,38 +13,44 @@ import { CategoryDto } from './Categories';
 export const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { name, typeValue, typeName, amount, color } = useAppSelector(
-    (rootState) => selectCategory(rootState, Number(id)),
-  );
+  const {
+    name,
+    type: typeValue,
+    typeName,
+    amount,
+    color,
+  } = useAppSelector((rootState) => selectCategory(rootState, Number(id)));
   const dispatch = useAppDispatch();
-  const [categoryName, setName] = useState(name);
-  const [categoryType, setCategoryType] = useState(typeValue ?? 0);
-  const [categoryAmount, setAmount] = useState(amount);
-  const [categoryColor, setColor] = useState(color);
+
+  const [formData, setFormData] = useState({
+    name: name,
+    type: typeValue ?? 0,
+    amount: amount,
+    color: color,
+  });
+
+  const handleChange = (prop: string, value: string | number) => {
+    setFormData({ ...formData, [prop]: value });
+  };
+
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    categoryTypeName.current = CategoryType[formData.type];
+  }, [formData.type]);
+
   const categoryTypeName = useRef(typeName);
 
-  const handleChangeComplete = (color: ColorResult) => {
-    setColor(color.hex);
-  };
-
-  const setCategory = (value: string | number) => {
-    const typeValue = Number(value);
-    setCategoryType(typeValue);
-    console.log(value, CategoryType[typeValue]);
-    categoryTypeName.current = CategoryType[typeValue];
-  };
-
   function saveCategory() {
-    const cat = {
+    const category = {
       id: Number(id),
-      name: categoryName,
-      typeValue: categoryType,
-      amount: categoryAmount,
-      color: categoryColor,
+      name: formData.name,
+      type: formData.type,
+      typeName: categoryTypeName.current,
+      amount: formData.amount,
+      color: formData.color,
     } as CategoryDto;
-    console.log(cat, cat.type, CategoryType);
-    dispatch(editCategory(cat));
+    dispatch(editCategory(category));
     navigate('/categories');
   }
 
@@ -61,7 +67,10 @@ export const Edit = () => {
     <>
       <h1 className="py-2">{id ? 'Edit Category' : 'New Category'}</h1>
 
-      <div className="border-b border-gray-900/10 py-6">
+      <form
+        onSubmit={saveCategory}
+        className="border-b border-gray-900/10 py-6"
+      >
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-4">
             <label
@@ -78,8 +87,10 @@ export const Edit = () => {
                   id="name"
                   autoComplete="name"
                   className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={categoryName}
-                  onChange={(event) => setName(event.target.value)}
+                  value={formData.name}
+                  onChange={(event) =>
+                    handleChange(event.target.name, event.target.value)
+                  }
                 />
               </div>
             </div>
@@ -100,8 +111,13 @@ export const Edit = () => {
                   id="amount"
                   autoComplete="amount"
                   className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={categoryAmount}
-                  onChange={(event) => setAmount(parseInt(event.target.value))}
+                  value={formData.amount}
+                  onChange={(event) =>
+                    handleChange(
+                      event.target.name,
+                      parseInt(event.target.value),
+                    )
+                  }
                 />
               </div>
             </div>
@@ -118,8 +134,10 @@ export const Edit = () => {
               <Listbox
                 as="div"
                 className="relative inline-block text-left"
-                value={categoryType}
-                onChange={(value: string | number) => setCategory(value)}
+                value={formData.type}
+                onChange={(value: string | number) => {
+                  handleChange('type', value);
+                }}
                 name="type"
               >
                 {({ open }) => (
@@ -164,13 +182,15 @@ export const Edit = () => {
             </label>
             <div className="mt-2">
               <CirclePicker
-                color={categoryColor}
-                onChangeComplete={handleChangeComplete}
+                color={formData.color}
+                onChangeComplete={(value: ColorResult) =>
+                  handleChange('color', value.hex)
+                }
               />
             </div>
           </div>
         </div>
-      </div>
+      </form>
 
       <div className="flex justify-between">
         <div className="mt-6 flex items-center justify-end gap-x-6">

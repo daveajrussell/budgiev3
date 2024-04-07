@@ -1,4 +1,4 @@
-import { Category, CategoryType } from 'budgie-core';
+import { Category } from 'budgie-core';
 import { Repository } from './repository';
 import { RepositoryBase } from './repositoryBase';
 
@@ -38,7 +38,7 @@ export class CategoryRepository
       `,
       userId,
       entity.name,
-      CategoryType[entity.type],
+      entity.type,
       entity.amount,
       entity.color,
     );

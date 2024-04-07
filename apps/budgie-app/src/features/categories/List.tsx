@@ -70,7 +70,7 @@ export const List = () => {
               return (
                 <TableBodyRow key={category.id}>
                   <TableBodyRowData>
-                    {category.typeValue === CategoryType.Income ? (
+                    {category.type === CategoryType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />

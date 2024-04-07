@@ -5,7 +5,7 @@ export type CategoryDto = {
   [key: string]: TableRowValue | undefined;
   id: number | undefined;
   name: TableRowValue;
-  typeValue: number;
+  type: number;
   typeName: string | undefined;
   amount: number;
   color: string;

@@ -16,21 +16,21 @@ export interface BudgetEntriesState {
   error: string | null | undefined;
 }
 
-export const fetchBudgetEntries = createAsyncThunk(
+export const fetchBudgetEntries = createAsyncThunk<BudgetEntryDto[]>(
   'entries/fetchEntries',
   async () => {
     return [];
   },
 );
 
-export const editEntry = createAsyncThunk(
+export const editEntry = createAsyncThunk<BudgetEntryDto, BudgetEntryDto>(
   'entries/editEntry',
-  async (entry: BudgetEntryDto) => {
-    return entry;
+  async (budgetEntryDto: BudgetEntryDto) => {
+    return budgetEntryDto;
   },
 );
 
-export const deleteEntry = createAsyncThunk(
+export const deleteEntry = createAsyncThunk<number, number>(
   'entries/deleteEntry',
   async (id: number) => {
     return id;
@@ -60,10 +60,9 @@ export const budgetSlice = createSlice({
         state.status = 'succeeded';
         const idx = state.entries.findIndex((c) => c.id === action.payload.id);
         if (idx >= 0) {
-          const entry = state.entries[idx];
-          entry.date = action.payload.date;
-          entry.categoryId = action.payload.categoryId;
-          entry.amount = action.payload.amount;
+          state.entries = state.entries.map((entry, index) =>
+            index === idx ? action.payload : entry,
+          );
         } else {
           state.entries.push(action.payload);
         }

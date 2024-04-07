@@ -16,54 +16,68 @@ export interface CategoriesState {
   error: string | null | undefined;
 }
 
-export const fetchCategories = createAsyncThunk(
+export const fetchCategories = createAsyncThunk<CategoryDto[]>(
   'categories/fetchCategories',
   async () => {
     const response = await fetch('/api/categories');
     const values = (await response.json()) as Category[];
     return values.map((value) => {
-      return <CategoryDto>{
+      return {
         id: value.id,
         name: value.name,
         amount: value.amount,
         typeName: CategoryType[value.type],
-        typeValue: value.type,
+        type: value.type,
         color: value.color,
-      };
+      } as CategoryDto;
     });
   },
 );
 
-export const editCategory = createAsyncThunk(
+export const editCategory = createAsyncThunk<CategoryDto, CategoryDto>(
   'categories/editCategory',
-  async (category: CategoryDto, { rejectWithValue }) => {
+  async (categoryDto: CategoryDto, { rejectWithValue }) => {
     try {
-      const isNew = !category.id;
+      const isNew = !categoryDto.id;
       const method = isNew ? 'POST' : 'PUT';
       const response = await fetch('/api/categories', {
         method: method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(<Category>{
-          id: category.id,
-          name: category.name,
-          amount: category.amount,
-          type: category.typeValue,
-          color: category.color,
-        }),
+        body: JSON.stringify({
+          id: categoryDto.id,
+          name: categoryDto.name,
+          amount: categoryDto.amount,
+          type: categoryDto.type,
+          color: categoryDto.color,
+        } as Category),
       });
+
       if (!response.ok) {
         throw new Error('Server responded with an error');
       }
-      return isNew ? await response.json() : category;
+
+      if (isNew) {
+        const category = await response.json();
+        return {
+          id: category.id,
+          name: category.name,
+          amount: category.amount,
+          color: category.color,
+          type: category.type,
+          typeName: CategoryType[category.type],
+        } as CategoryDto;
+      } else {
+        return categoryDto;
+      }
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
   },
 );
 
-export const deleteCategory = createAsyncThunk(
+export const deleteCategory = createAsyncThunk<number, number>(
   'categories/deleteCategory',
   async (id: number, { rejectWithValue }) => {
     try {
@@ -81,7 +95,7 @@ export const categorySlice = createSlice({
   name: 'category',
   initialState: initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
         state.status = 'loading';
@@ -103,12 +117,9 @@ export const categorySlice = createSlice({
           (c) => c.id === action.payload.id,
         );
         if (idx >= 0) {
-          const category = state.categories[idx];
-          category.name = action.payload.name;
-          category.typeValue = action.payload.typeValue;
-          category.typeName = CategoryType[action.payload.typeValue];
-          category.amount = action.payload.amount;
-          category.color = action.payload.color;
+          state.categories = state.categories.map((category, index) =>
+            index === idx ? action.payload : category,
+          );
         } else {
           state.categories.push(action.payload);
         }
@@ -134,11 +145,11 @@ export const selectCategory = createAppSelector(
   (_, id: number) => id,
   (categories: CategoryDto[], id) =>
     categories.find((category) => category.id === id) ??
-    <CategoryDto>{
+    ({
       name: '',
-      typeValue: CategoryType.Income,
+      type: CategoryType.Income,
       typeName: CategoryType[CategoryType.Income],
       amount: 0,
       color: '',
-    },
+    } as CategoryDto),
 );
