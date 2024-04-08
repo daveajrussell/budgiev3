@@ -2,7 +2,7 @@ import { Transition, Dialog } from '@headlessui/react';
 import { Fragment } from 'react/jsx-runtime';
 import { Button } from '../../components/Button';
 import { useAppDispatch } from '../../app/hooks';
-import { deleteEntry } from './budgetSlice';
+import { deleteEntry } from './entriesSlice';
 
 type DeleteProps = {
   id: number;
@@ -10,7 +10,7 @@ type DeleteProps = {
   closeModal: () => void;
 };
 
-export const DeleteEntry = ({ id, isOpen, closeModal }: DeleteProps) => {
+export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
   const dispatch = useAppDispatch();
 
   function onDelete() {
@@ -50,11 +50,11 @@ export const DeleteEntry = ({ id, isOpen, closeModal }: DeleteProps) => {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Delete budget entry
+                    Delete entry
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      This will permanently delete this budget entry.
+                      This will permanently delete this entry.
                     </p>
                   </div>
 

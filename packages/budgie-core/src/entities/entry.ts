@@ -1,6 +1,6 @@
 import { Entity } from './entity';
 
-export interface BudgetEntry extends Entity {
+export interface Entry extends Entity {
   categoryId: number;
   date: Date;
   amount: number;

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { TableRowValue } from '../../types/table-row-value';
 
-export type BudgetEntryDto = {
+export type EntryDto = {
   [key: string]: TableRowValue;
   id: number;
   date: string;
@@ -9,7 +9,7 @@ export type BudgetEntryDto = {
   amount: number;
 };
 
-export const Budget = () => {
+export const Entries = () => {
   return (
     <>
       <Outlet></Outlet>

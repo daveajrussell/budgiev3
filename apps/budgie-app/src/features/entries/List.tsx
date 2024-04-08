@@ -5,11 +5,11 @@ import {
   fetchCategories,
   selectAllCategories,
 } from '../categories/categorySlice';
-import { fetchBudgetEntries, selectEntries } from './budgetSlice';
+import { fetchEntries, selectEntries } from './entriesSlice';
 import { useEffect, useRef, useState } from 'react';
-import { DeleteEntry } from './DeleteEntry';
+import { Delete } from './Delete';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { BudgetEntryDto } from './Budget';
+import { EntryDto } from './Entries';
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
@@ -24,7 +24,7 @@ import {
 } from '../../components/table/Table';
 import { CategoryType } from 'budgie-core';
 
-export const ListEntries = () => {
+export const List = () => {
   const dispatch = useAppDispatch();
 
   const categories = useAppSelector((rootState) =>
@@ -34,7 +34,7 @@ export const ListEntries = () => {
   const entries = useAppSelector((rootState) => selectEntries(rootState));
 
   const categoriesStatus = useAppSelector((state) => state.category.status);
-  const budgetStatus = useAppSelector((state) => state.budget.status);
+  const entriesStatus = useAppSelector((state) => state.entry.status);
 
   useEffect(() => {
     if (categoriesStatus === 'idle') {
@@ -43,8 +43,8 @@ export const ListEntries = () => {
   }, [categoriesStatus, dispatch]);
 
   useEffect(() => {
-    if (budgetStatus === 'idle') {
-      dispatch(fetchBudgetEntries());
+    if (entriesStatus === 'idle') {
+      dispatch(fetchEntries());
     }
   }, [categoriesStatus, dispatch]);
 
@@ -64,8 +64,8 @@ export const ListEntries = () => {
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1 className="py-2">Budget entries</h1>
-        <NavLink to="entry/new">
+        <h1 className="py-2">Entries</h1>
+        <NavLink to="new">
           <Button text="Add new" type="button" color="secondary" />
         </NavLink>
       </div>
@@ -80,7 +80,7 @@ export const ListEntries = () => {
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
-            {entries.map((entry: BudgetEntryDto) => {
+            {entries.map((entry: EntryDto) => {
               const category = categories.find(
                 (c) => c.id === entry.categoryId,
               );
@@ -101,7 +101,7 @@ export const ListEntries = () => {
                   <TableBodyRowData>
                     <span className="flex justify-evenly">
                       <NavLink
-                        to={'entry/' + entry.id}
+                        to={entry?.id.toString() ?? ''}
                         className=" font-semibold text-gray-900 hover:text-violet-500"
                       >
                         <PencilIcon className="-mr-1 h-5 w-5" />
@@ -125,11 +125,7 @@ export const ListEntries = () => {
         </Table>
       </div>
 
-      <DeleteEntry
-        id={idToDelete.current}
-        isOpen={isOpen}
-        closeModal={closeModal}
-      />
+      <Delete id={idToDelete.current} isOpen={isOpen} closeModal={closeModal} />
     </>
   );
 };

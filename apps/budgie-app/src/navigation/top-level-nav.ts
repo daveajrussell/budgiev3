@@ -1,9 +1,9 @@
-import { Budget } from '../features/budget/Budget';
+import { Entries } from '../features/entries/Entries';
 import { Categories } from '../features/categories/Categories';
 import { Edit as EditCategory } from '../features/categories/Edit';
 import { List as ListCategories } from '../features/categories/List';
-import { ListEntries } from '../features/budget/ListEntries';
-import { EditEntry } from '../features/budget/EditEntry';
+import { List as ListEntries } from '../features/entries/List';
+import { Edit as EditEntry } from '../features/entries/Edit';
 import { Dashboard } from '../features/dashboard/Dashboard';
 
 const topLevelNavigation = [
@@ -35,23 +35,23 @@ const topLevelNavigation = [
     ],
   },
   {
-    name: 'Budget',
-    path: '/budget',
-    Component: Budget,
+    name: 'Entries',
+    path: '/entries',
+    Component: Entries,
     children: [
       {
-        name: 'Budget',
-        path: '/budget',
+        name: 'Entries',
+        path: '/entries',
         Component: ListEntries,
       },
       {
-        name: 'Edit budget',
-        path: '/budget/entry/:id',
+        name: 'Edit entry',
+        path: '/entries/:id',
         Component: EditEntry,
       },
       {
-        name: 'New budget',
-        path: '/budget/entry/new',
+        name: 'New entry',
+        path: '/entries/new',
         Component: EditEntry,
       },
     ],

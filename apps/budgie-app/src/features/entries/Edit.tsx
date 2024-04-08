@@ -1,17 +1,17 @@
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { useEffect, useState } from 'react';
-import { DeleteEntry } from './DeleteEntry';
+import { Delete } from './Delete';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   fetchCategories,
   selectAllCategories,
 } from '../categories/categorySlice';
 import { Listbox } from '@headlessui/react';
-import { editEntry, selectEntry } from './budgetSlice';
+import { editEntry, selectEntry } from './entriesSlice';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 
-export const EditEntry = () => {
+export const Edit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -57,12 +57,12 @@ export const EditEntry = () => {
         amount: formData.amount,
       }),
     );
-    navigate('/budget');
+    navigate('/entries');
   }
 
   function closeModal() {
     setIsOpen(false);
-    navigate('/budget');
+    navigate('/entries');
   }
 
   function openModal() {
@@ -185,7 +185,7 @@ export const EditEntry = () => {
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <NavLink to="/budget">
+          <NavLink to="/entries">
             <Button text="Cancel" type="button" color="secondary" />
           </NavLink>
           <Button
@@ -197,7 +197,7 @@ export const EditEntry = () => {
         </div>
       </div>
       {id ? (
-        <DeleteEntry id={Number(id)} isOpen={isOpen} closeModal={closeModal} />
+        <Delete id={Number(id)} isOpen={isOpen} closeModal={closeModal} />
       ) : null}
     </>
   );

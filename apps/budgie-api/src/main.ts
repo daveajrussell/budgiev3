@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import categoriesApi from './routes/categoriesRoutes';
-import budgetEntryApi from './routes/budgetEntryRoutes';
+import entryApi from './routes/entryRoutes';
 
 const corsOptions = {
   origin: 'http://localhost:5173',
@@ -12,7 +12,7 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(categoriesApi);
-app.use(budgetEntryApi);
+app.use(entryApi);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

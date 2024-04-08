@@ -55,7 +55,7 @@ export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
                       This will permanently delete this category and you will no
-                      longer be able to use it in any budgets.
+                      longer be able to use it in your budget.
                     </p>
                   </div>
 
