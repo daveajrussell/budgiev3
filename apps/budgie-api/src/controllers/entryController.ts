@@ -2,7 +2,7 @@ import { Entry } from 'budgie-core';
 import { EntryRepository } from 'budgie-data';
 import { Request, Response } from 'express';
 
-class EntryController {
+class EntriesController {
   private readonly _entryRepository: EntryRepository;
   constructor() {
     this._entryRepository = new EntryRepository();
@@ -48,5 +48,5 @@ class EntryController {
   };
 }
 
-const entryController = new EntryController();
-export default entryController;
+const entriesController = new EntriesController();
+export default entriesController;
