@@ -1,3 +1,4 @@
+import { BudgetEntryRepository } from './budgetEntryRepostory';
 import { CategoryRepository } from './categoryRepository';
 
-export { CategoryRepository };
+export { CategoryRepository, BudgetEntryRepository };
