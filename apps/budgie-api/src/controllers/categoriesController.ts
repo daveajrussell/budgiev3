@@ -3,7 +3,7 @@ import { CategoryRepository } from 'budgie-data';
 import { Request, Response } from 'express';
 
 class CategoriesController {
-  private readonly _categoryRepository;
+  private readonly _categoryRepository: CategoryRepository;
   constructor(categoryRepository: CategoryRepository) {
     this._categoryRepository = categoryRepository;
   }

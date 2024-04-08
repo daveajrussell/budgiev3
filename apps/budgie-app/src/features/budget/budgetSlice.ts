@@ -3,6 +3,7 @@ import { BudgetEntryDto } from './Budget';
 import { RootState } from '../../app/store';
 import { createAppSelector } from '../../app/hooks';
 import formatDate from '../../helpers/dates';
+import { BudgetEntry } from 'budgie-core';
 
 const initialState: BudgetEntriesState = {
   entries: [],
@@ -19,21 +20,70 @@ export interface BudgetEntriesState {
 export const fetchBudgetEntries = createAsyncThunk<BudgetEntryDto[]>(
   'entries/fetchEntries',
   async () => {
-    return [];
+    const response = await fetch('/api/budget-entries');
+    const values = (await response.json()) as BudgetEntry[];
+    return values.map((value) => {
+      return {
+        id: value.id,
+        categoryId: value.categoryId,
+        date: formatDate(new Date(value.date)),
+        amount: value.amount,
+      } as BudgetEntryDto;
+    });
   },
 );
 
 export const editEntry = createAsyncThunk<BudgetEntryDto, BudgetEntryDto>(
   'entries/editEntry',
-  async (budgetEntryDto: BudgetEntryDto) => {
-    return budgetEntryDto;
+  async (budgetEntryDto: BudgetEntryDto, { rejectWithValue }) => {
+    try {
+      const isNew = !budgetEntryDto.id;
+      const method = isNew ? 'POST' : 'PUT';
+      const response = await fetch('/api/budget-entries', {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: budgetEntryDto.id,
+          categoryId: budgetEntryDto.categoryId,
+          date: new Date(budgetEntryDto.date),
+          amount: budgetEntryDto.amount,
+        } as BudgetEntry),
+      });
+
+      if (!response.ok) {
+        throw new Error('Server responded with an error');
+      }
+
+      if (isNew) {
+        const budgetEntry = (await response.json()) as BudgetEntry;
+        return {
+          id: budgetEntry.id,
+          categoryId: budgetEntry.categoryId,
+          date: formatDate(new Date(budgetEntry.date)),
+          amount: budgetEntry.amount,
+        } as BudgetEntryDto;
+      } else {
+        return budgetEntryDto;
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   },
 );
 
 export const deleteEntry = createAsyncThunk<number, number>(
   'entries/deleteEntry',
-  async (id: number) => {
-    return id;
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await fetch('/api/budget-entries/' + id, {
+        method: 'DELETE',
+      });
+      return id;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   },
 );
 
@@ -41,7 +91,7 @@ export const budgetSlice = createSlice({
   name: 'budget',
   initialState: initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchBudgetEntries.pending, (state) => {
         state.status = 'loading';
