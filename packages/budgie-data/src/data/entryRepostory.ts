@@ -12,7 +12,7 @@ export class EntryRepository
     offset: number,
   ): Promise<Entry[]> {
     return this.queryAsync(
-      'SELECT id, categoryId, date, amount FROM entries WHERE userId = ? LIMIT ? OFFSET ?',
+      'SELECT id, accountId, date, amount FROM entries WHERE userId = ? LIMIT ? OFFSET ?',
       userId,
       limit,
       offset,
@@ -21,7 +21,7 @@ export class EntryRepository
 
   async getByIdAsync(userId: number, id: number): Promise<Entry | undefined> {
     return this.queryAsync(
-      'SELECT id, categoryId, date, amount FROM entries WHERE userId = ? AND id = ? LIMIT 1',
+      'SELECT id, accountId, date, amount FROM entries WHERE userId = ? AND id = ? LIMIT 1',
       userId,
       id,
     );
@@ -30,11 +30,11 @@ export class EntryRepository
   async addAsync(userId: number, entity: Entry): Promise<Entry> {
     const result = await this.queryAsync(
       `
-          INSERT INTO entries (userId, categoryId, date, amount) VALUES (?, ?, ?, ?)
-          RETURNING id, categoryId, date, amount
+          INSERT INTO entries (userId, accountId, date, amount) VALUES (?, ?, ?, ?)
+          RETURNING id, accountId, date, amount
         `,
       userId,
-      entity.categoryId,
+      entity.accountId,
       entity.date,
       entity.amount,
     );
@@ -43,8 +43,8 @@ export class EntryRepository
 
   async updateAsync(userId: number, id: number, entity: Entry): Promise<void> {
     return this.queryAsync(
-      'UPDATE entries SET categoryId = ?, date = ?, amount = ? WHERE id = ? and userId = ?',
-      entity.categoryId,
+      'UPDATE entries SET accountId = ?, date = ?, amount = ? WHERE id = ? and userId = ?',
+      entity.accountId,
       entity.date,
       entity.amount,
       id,

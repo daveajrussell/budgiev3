@@ -1,4 +1,4 @@
 import { EntryRepository } from './entryRepostory';
-import { CategoryRepository } from './categoryRepository';
+import { AccountRepository } from './accountRepository';
 
-export { CategoryRepository, EntryRepository };
+export { AccountRepository, EntryRepository };

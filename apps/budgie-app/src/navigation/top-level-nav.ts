@@ -1,7 +1,7 @@
 import { Entries } from '../features/entries/Entries';
-import { Categories } from '../features/categories/Categories';
-import { Edit as EditCategory } from '../features/categories/Edit';
-import { List as ListCategories } from '../features/categories/List';
+import { Accounts } from '../features/accounts/Accounts';
+import { Edit as EditAccount } from '../features/accounts/Edit';
+import { List as ListAccounts } from '../features/accounts/List';
 import { List as ListEntries } from '../features/entries/List';
 import { Edit as EditEntry } from '../features/entries/Edit';
 import { Dashboard } from '../features/dashboard/Dashboard';
@@ -13,24 +13,24 @@ const topLevelNavigation = [
     Component: Dashboard,
   },
   {
-    name: 'Categories',
-    path: '/categories',
-    Component: Categories,
+    name: 'Accounts',
+    path: '/accounts',
+    Component: Accounts,
     children: [
       {
-        name: 'Categories',
-        path: '/categories',
-        Component: ListCategories,
+        name: 'Accounts',
+        path: '/accounts',
+        Component: ListAccounts,
       },
       {
-        name: 'Edit category',
-        path: '/categories/:id',
-        Component: EditCategory,
+        name: 'Edit account',
+        path: '/accounts/:id',
+        Component: EditAccount,
       },
       {
-        name: 'New category',
-        path: '/categories/new',
-        Component: EditCategory,
+        name: 'New account',
+        path: '/accounts/new',
+        Component: EditAccount,
       },
     ],
   },

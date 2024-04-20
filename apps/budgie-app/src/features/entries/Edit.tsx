@@ -3,10 +3,7 @@ import { Button } from '../../components/Button';
 import { useEffect, useState } from 'react';
 import { Delete } from './Delete';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {
-  fetchCategories,
-  selectAllCategories,
-} from '../categories/categorySlice';
+import { fetchAccounts, selectAllAccounts } from '../accounts/accountSlice';
 import { Listbox } from '@headlessui/react';
 import { editEntry, selectEntry } from './entriesSlice';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
@@ -17,28 +14,26 @@ export const Edit = () => {
 
   const { id } = useParams();
 
-  const categories = useAppSelector((rootState) =>
-    selectAllCategories(rootState),
-  );
+  const accounts = useAppSelector((rootState) => selectAllAccounts(rootState));
 
-  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const accountsStatus = useAppSelector((state) => state.account.status);
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategories());
+    if (accountsStatus === 'idle') {
+      dispatch(fetchAccounts());
     }
-  }, [categoriesStatus, dispatch]);
+  }, [accountsStatus, dispatch]);
 
-  const { date, categoryId, amount } = useAppSelector((rootState) =>
+  const { date, accountId, amount } = useAppSelector((rootState) =>
     selectEntry(rootState, Number(id)),
   );
 
-  const categoryMap = new Map();
-  categories.map((c) => categoryMap.set(c.id, c.name));
+  const accountMap = new Map();
+  accounts.map((c) => accountMap.set(c.id, c.name));
 
   const [formData, setFormData] = useState({
     date: date,
-    categoryId: categoryId,
+    accountId: accountId,
     amount: amount,
   });
 
@@ -53,7 +48,7 @@ export const Edit = () => {
       editEntry({
         id: Number(id),
         date: formData.date,
-        categoryId: Number(formData.categoryId),
+        accountId: Number(formData.accountId),
         amount: formData.amount,
       }),
     );
@@ -99,26 +94,24 @@ export const Edit = () => {
 
           <div className="col-span-full">
             <label
-              htmlFor="category"
+              htmlFor="account"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              Category
+              Account
             </label>
             <div className="mt-2 flex items-center gap-x-3">
               <Listbox
                 as="div"
                 className="relative inline-block text-left"
-                value={formData.categoryId}
-                onChange={(categoryId) =>
-                  handleChange('categoryId', categoryId)
-                }
-                name="categoryId"
-                id="categoryId"
+                value={formData.accountId}
+                onChange={(accountId) => handleChange('accountId', accountId)}
+                name="accountId"
+                id="accountId"
               >
                 {({ open }) => (
                   <>
                     <Listbox.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {categoryMap.get(formData.categoryId)}
+                      {accountMap.get(formData.accountId)}
                       {open ? (
                         <ChevronUpIcon
                           className="-mr-1 h-5 w-5 text-gray-400"
@@ -132,10 +125,10 @@ export const Edit = () => {
                       )}
                     </Listbox.Button>
                     <Listbox.Options className="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {categories.map((category) => (
-                        <Listbox.Option key={category.id} value={category.id}>
+                      {accounts.map((account) => (
+                        <Listbox.Option key={account.id} value={account.id}>
                           <span className="text-gray-700 block px-4 py-3 text-sm hover:bg-gray-100 cursor-pointer">
-                            {category.name}
+                            {account.name}
                           </span>
                         </Listbox.Option>
                       ))}

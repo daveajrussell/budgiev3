@@ -1,10 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {
-  fetchCategories,
-  selectAllCategories,
-} from '../categories/categorySlice';
+import { fetchAccounts, selectAllAccounts } from '../accounts/accountSlice';
 import { fetchEntries, selectEntries } from './entriesSlice';
 import { useEffect, useRef, useState } from 'react';
 import { Delete } from './Delete';
@@ -22,34 +19,32 @@ import {
   TableHeaderRow,
   TableHeaderRowData,
 } from '../../components/table/Table';
-import { CategoryType } from 'budgie-core';
+import { AccountType } from 'budgie-core';
 
 export const List = () => {
   const dispatch = useAppDispatch();
 
-  const categories = useAppSelector((rootState) =>
-    selectAllCategories(rootState),
-  );
+  const accounts = useAppSelector((rootState) => selectAllAccounts(rootState));
 
   const entries = useAppSelector((rootState) => selectEntries(rootState));
 
-  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const accountsStatus = useAppSelector((state) => state.account.status);
   const entriesStatus = useAppSelector((state) => state.entry.status);
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategories());
+    if (accountsStatus === 'idle') {
+      dispatch(fetchAccounts());
     }
-  }, [categoriesStatus, dispatch]);
+  }, [accountsStatus, dispatch]);
 
   useEffect(() => {
     if (entriesStatus === 'idle') {
       dispatch(fetchEntries());
     }
-  }, [categoriesStatus, dispatch]);
+  }, [accountsStatus, dispatch]);
 
-  const categoryMap = new Map();
-  categories.map((c) => categoryMap.set(c.id, c.name));
+  const accountMap = new Map();
+  accounts.map((c) => accountMap.set(c.id, c.name));
 
   const [isOpen, setIsOpen] = useState(false);
   const idToDelete = useRef(0);
@@ -75,26 +70,24 @@ export const List = () => {
           <TableHeaderRow>
             <TableHeaderRowData></TableHeaderRowData>
             <TableHeaderRowData>Date</TableHeaderRowData>
-            <TableHeaderRowData>Category</TableHeaderRowData>
+            <TableHeaderRowData>Account</TableHeaderRowData>
             <TableHeaderRowData>Amount</TableHeaderRowData>
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
             {entries.map((entry: EntryDto) => {
-              const category = categories.find(
-                (c) => c.id === entry.categoryId,
-              );
+              const account = accounts.find((c) => c.id === entry.accountId);
               return (
                 <TableBodyRow key={entry.id}>
                   <TableBodyRowData>
-                    {category?.type === CategoryType.Income ? (
+                    {account?.type === AccountType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />
                     )}
                   </TableBodyRowData>
                   <TableBodyRowData>{entry.date}</TableBodyRowData>
-                  <TableBodyRowData>{category?.name}</TableBodyRowData>
+                  <TableBodyRowData>{account?.name}</TableBodyRowData>
                   <TableBodyRowData>
                     £{entry.amount.toLocaleString()}
                   </TableBodyRowData>

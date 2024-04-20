@@ -2,34 +2,29 @@ import { TooltipItem } from 'chart.js';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { PieChart } from '../../components/PieChart';
 import { Tile } from '../../components/Tile';
-import {
-  fetchCategories,
-  selectAllCategories,
-} from '../categories/categorySlice';
+import { fetchAccounts, selectAllAccounts } from '../accounts/accountSlice';
 import hexRgb from 'hex-rgb';
-import { CategoryType } from 'budgie-core';
+import { AccountType } from 'budgie-core';
 import { useEffect } from 'react';
 
 export const Dashboard = () => {
   const dispatch = useAppDispatch();
 
-  const categories = useAppSelector((rootState) =>
-    selectAllCategories(rootState),
-  );
+  const accounts = useAppSelector((rootState) => selectAllAccounts(rootState));
 
-  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const accountsStatus = useAppSelector((state) => state.account.status);
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategories());
+    if (accountsStatus === 'idle') {
+      dispatch(fetchAccounts());
     }
-  }, [categoriesStatus, dispatch]);
+  }, [accountsStatus, dispatch]);
 
-  const incomes = categories.filter((c) => c.type === CategoryType.Income),
+  const incomes = accounts.filter((c) => c.type === AccountType.Income),
     incomesTotal = incomes
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),
-    expenses = categories.filter((c) => c.type === CategoryType.Expense),
+    expenses = accounts.filter((c) => c.type === AccountType.Expense),
     expensesTotal = expenses
       .map((c) => c.amount)
       .reduce((total, amount) => total + amount, 0),

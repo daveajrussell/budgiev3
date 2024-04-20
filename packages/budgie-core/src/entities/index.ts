@@ -1,6 +1,6 @@
 import { Entry } from './entry';
-import { Category } from './category';
-import { CategoryType } from './category-type';
+import { Account } from './account';
+import { AccountType } from './account-type';
 
-export { CategoryType };
-export type { Category, Entry };
+export { AccountType };
+export type { Account, Entry };

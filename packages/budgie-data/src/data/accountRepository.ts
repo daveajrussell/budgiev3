@@ -1,39 +1,36 @@
-import { Category } from 'budgie-core';
+import { Account } from 'budgie-core';
 import { Repository } from './repository';
 import { RepositoryBase } from './repositoryBase';
 
-export class CategoryRepository
+export class AccountRepository
   extends RepositoryBase
-  implements Repository<Category>
+  implements Repository<Account>
 {
   async getAllAsync(
     userId: number,
     limit: number,
     offset: number,
-  ): Promise<Category[]> {
+  ): Promise<Account[]> {
     return this.queryAsync(
-      'SELECT id, name, type, amount, color FROM categories WHERE userId = ? LIMIT ? OFFSET ?',
+      'SELECT id, name, type, amount, color FROM accounts WHERE userId = ? LIMIT ? OFFSET ?',
       userId,
       limit,
       offset,
     );
   }
 
-  async getByIdAsync(
-    userId: number,
-    id: number,
-  ): Promise<Category | undefined> {
+  async getByIdAsync(userId: number, id: number): Promise<Account | undefined> {
     return this.queryAsync(
-      'SELECT id, name, type, amount, color FROM categories WHERE userId = ? AND id = ? LIMIT 1',
+      'SELECT id, name, type, amount, color FROM accounts WHERE userId = ? AND id = ? LIMIT 1',
       userId,
       id,
     );
   }
 
-  async addAsync(userId: number, entity: Category): Promise<Category> {
+  async addAsync(userId: number, entity: Account): Promise<Account> {
     const result = await this.queryAsync(
       `
-        INSERT INTO categories (userId, name, type, amount, color) VALUES (?, ?, ?, ?, ?)
+        INSERT INTO accounts (userId, name, type, amount, color) VALUES (?, ?, ?, ?, ?)
         RETURNING id, name, type, amount, color
       `,
       userId,
@@ -48,10 +45,10 @@ export class CategoryRepository
   async updateAsync(
     userId: number,
     id: number,
-    entity: Category,
+    entity: Account,
   ): Promise<void> {
     return this.queryAsync(
-      'UPDATE categories SET name = ?, type = ?, amount = ?, color = ? WHERE id = ? and userId = ?',
+      'UPDATE accounts SET name = ?, type = ?, amount = ?, color = ? WHERE id = ? and userId = ?',
       entity.name,
       entity.type,
       entity.amount,
@@ -63,7 +60,7 @@ export class CategoryRepository
 
   async deleteAsync(userId: number, id: number): Promise<void> {
     return this.queryAsync(
-      'DELETE FROM categories WHERE id = ? and userId = ?',
+      'DELETE FROM accounts WHERE id = ? and userId = ?',
       id,
       userId,
     );

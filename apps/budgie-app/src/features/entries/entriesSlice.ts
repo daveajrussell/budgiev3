@@ -25,7 +25,7 @@ export const fetchEntries = createAsyncThunk<EntryDto[]>(
     return values.map((value) => {
       return {
         id: value.id,
-        categoryId: value.categoryId,
+        accountId: value.accountId,
         date: formatDate(new Date(value.date)),
         amount: value.amount,
       } as EntryDto;
@@ -46,7 +46,7 @@ export const editEntry = createAsyncThunk<EntryDto, EntryDto>(
         },
         body: JSON.stringify({
           id: entryDto.id,
-          categoryId: entryDto.categoryId,
+          accountId: entryDto.accountId,
           date: new Date(entryDto.date),
           amount: entryDto.amount,
         } as Entry),
@@ -60,7 +60,7 @@ export const editEntry = createAsyncThunk<EntryDto, EntryDto>(
         const entry = (await response.json()) as Entry;
         return {
           id: entry.id,
-          categoryId: entry.categoryId,
+          accountId: entry.accountId,
           date: formatDate(new Date(entry.date)),
           amount: entry.amount,
         } as EntryDto;
@@ -138,7 +138,7 @@ export const selectEntry = createAppSelector(
   (_, id: number | undefined) => id,
   (entries: EntryDto[], id) =>
     entries.find((entry) => entry.id === id) ?? {
-      categoryId: 1,
+      accountId: 1,
       date: formatDate(),
       amount: 0,
     },

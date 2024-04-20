@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { TableRowValue } from '../../types/table-row-value';
 
-export type CategoryDto = {
+export type AccountDto = {
   [key: string]: TableRowValue | undefined;
   id: number | undefined;
   name: TableRowValue;
@@ -11,7 +11,7 @@ export type CategoryDto = {
   color: string;
 };
 
-export const Categories = () => {
+export const Accounts = () => {
   return (
     <>
       <Outlet></Outlet>

@@ -3,14 +3,14 @@ import {
   ArrowTrendingDownIcon,
 } from '@heroicons/react/20/solid';
 import { NavLink } from 'react-router-dom';
-import { CategoryDto } from './Categories';
+import { AccountDto } from './Accounts';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Button } from '../../components/Button';
 import { Delete } from './Delete';
 import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { fetchCategories, selectAllCategories } from './categorySlice';
+import { fetchAccounts, selectAllAccounts } from './accountSlice';
 import {
   Table,
   TableHeaderRow,
@@ -19,22 +19,20 @@ import {
   TableBodyRow,
   TableBodyRowData,
 } from '../../components/table/Table';
-import { CategoryType } from 'budgie-core';
+import { AccountType } from 'budgie-core';
 
 export const List = () => {
   const dispatch = useAppDispatch();
 
-  const categories = useAppSelector((rootState) =>
-    selectAllCategories(rootState),
-  );
+  const accounts = useAppSelector((rootState) => selectAllAccounts(rootState));
 
-  const categoriesStatus = useAppSelector((state) => state.category.status);
+  const accountsStatus = useAppSelector((state) => state.account.status);
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategories());
+    if (accountsStatus === 'idle') {
+      dispatch(fetchAccounts());
     }
-  }, [categoriesStatus, dispatch]);
+  }, [accountsStatus, dispatch]);
 
   const [isOpen, setIsOpen] = useState(false);
   const idToDelete = useRef(0);
@@ -50,7 +48,7 @@ export const List = () => {
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1 className="py-2">Categories</h1>
+        <h1 className="py-2">Accounts</h1>
         <NavLink to="new">
           <Button text="Add new" type="button" color="secondary" />
         </NavLink>
@@ -66,25 +64,25 @@ export const List = () => {
             <TableHeaderRowData></TableHeaderRowData>
           </TableHeaderRow>
           <TableBody>
-            {categories?.map((category: CategoryDto) => {
+            {accounts?.map((account: AccountDto) => {
               return (
-                <TableBodyRow key={category.id}>
+                <TableBodyRow key={account.id}>
                   <TableBodyRowData>
-                    {category.type === CategoryType.Income ? (
+                    {account.type === AccountType.Income ? (
                       <ArrowTrendingUpIcon className="-mr-1 h-5 w-5 text-green-500" />
                     ) : (
                       <ArrowTrendingDownIcon className="-mr-1 h-5 w-5 text-red-500" />
                     )}
                   </TableBodyRowData>
-                  <TableBodyRowData>{category.name}</TableBodyRowData>
-                  <TableBodyRowData>{category.typeName}</TableBodyRowData>
+                  <TableBodyRowData>{account.name}</TableBodyRowData>
+                  <TableBodyRowData>{account.typeName}</TableBodyRowData>
                   <TableBodyRowData>
-                    £{category.amount.toLocaleString()}
+                    £{account.amount.toLocaleString()}
                   </TableBodyRowData>
                   <TableBodyRowData>
                     <span className="flex justify-evenly">
                       <NavLink
-                        to={category.id?.toString() ?? ''}
+                        to={account.id?.toString() ?? ''}
                         className=" font-semibold text-gray-900 hover:text-violet-500"
                       >
                         <PencilIcon className="-mr-1 h-5 w-5" />
@@ -93,7 +91,7 @@ export const List = () => {
                       <span
                         className=" font-semibold text-gray-900 hover:text-red-500 cursor-pointer"
                         onClick={() => {
-                          idToDelete.current = category.id ?? 0;
+                          idToDelete.current = account.id ?? 0;
                           openModal();
                         }}
                       >

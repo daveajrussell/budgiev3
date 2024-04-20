@@ -5,7 +5,7 @@ export type EntryDto = {
   [key: string]: TableRowValue;
   id: number;
   date: string;
-  categoryId: number;
+  accountId: number;
   amount: number;
 };
 

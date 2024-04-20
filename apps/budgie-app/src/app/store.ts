@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import categoryReducer from '../features/categories/categorySlice';
+import accountReducer from '../features/accounts/accountSlice';
 import entryReducer from '../features/entries/entriesSlice';
 
 const store = configureStore({
   reducer: {
-    category: categoryReducer,
+    account: accountReducer,
     entry: entryReducer,
   },
 });

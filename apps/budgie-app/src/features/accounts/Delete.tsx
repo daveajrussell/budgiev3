@@ -2,7 +2,7 @@ import { Transition, Dialog } from '@headlessui/react';
 import { Fragment } from 'react/jsx-runtime';
 import { Button } from '../../components/Button';
 import { useAppDispatch } from '../../app/hooks';
-import { deleteCategory } from './categorySlice';
+import { deleteAccount } from './accountSlice';
 
 type DeleteProps = {
   id: number;
@@ -14,7 +14,7 @@ export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
   const dispatch = useAppDispatch();
 
   function onDelete() {
-    dispatch(deleteCategory(id));
+    dispatch(deleteAccount(id));
     closeModal();
   }
 
@@ -50,11 +50,11 @@ export const Delete = ({ id, isOpen, closeModal }: DeleteProps) => {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Delete category
+                    Delete account
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      This will permanently delete this category and you will no
+                      This will permanently delete this account and you will no
                       longer be able to use it in your budget.
                     </p>
                   </div>

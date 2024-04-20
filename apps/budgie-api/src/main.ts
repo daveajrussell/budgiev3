@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import categoriesApi from './routes/categoriesRoutes';
+import accountsApi from './routes/accountsRoutes';
 import entriesApi from './routes/entriesRoutes';
 
 const corsOptions = {
@@ -11,7 +11,7 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use(categoriesApi);
+app.use(accountsApi);
 app.use(entriesApi);
 
 app.listen(port, () => {
