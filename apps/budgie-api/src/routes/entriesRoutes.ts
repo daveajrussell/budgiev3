@@ -1,5 +1,5 @@
 import express from 'express';
-import entriesController from '../controllers/entryController';
+import entriesController from '../controllers/entriesController';
 
 const entriesApi = express.Router();
 
