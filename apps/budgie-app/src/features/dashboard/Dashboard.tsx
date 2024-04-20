@@ -71,6 +71,18 @@ export const Dashboard = () => {
               labelFormatter={formatLabel}
             />
           </Tile>
+          <Tile title="Spending">
+            <PieChart
+              labels={[]}
+              datasets={{
+                data: [],
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+              }}
+              legendPosition="right"
+              labelFormatter={formatLabel}
+            />
+          </Tile>
         </div>
       </div>
     </>
